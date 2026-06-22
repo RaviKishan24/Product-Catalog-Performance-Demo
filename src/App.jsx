@@ -7,6 +7,7 @@ const App = () => {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [debouncedSearch, setDebouncedSearch] = useState("");
+
   const productperPage = 30;
 
   const filteredProducts = useMemo(() => {
@@ -18,42 +19,46 @@ const App = () => {
     );
   }, [debouncedSearch]);
 
-
   const currentProducts = useMemo(() => {
-    const statIndex = (currentPage - 1) * productperPage;
-    return filteredProducts.slice(statIndex, statIndex + productperPage);
+    const startIndex = (currentPage - 1) * productperPage;
+    return filteredProducts.slice(startIndex, startIndex + productperPage);
   }, [filteredProducts, currentPage]);
 
   const totalPages = Math.ceil(
     filteredProducts.length / productperPage
-  )
-
-
+  );
 
   const handleClick = useCallback((item) => {
     setMsg(`${item} is selected`);
   }, []);
 
-  
   useEffect(() => {
     console.log("App Mounted");
+
     const timer = setTimeout(() => {
       setDebouncedSearch(search);
-    }, 2000)
+    }, 2000);
 
-    return(()=>clearInterval(timer))
+    return () => clearTimeout(timer);
   }, [search]);
+
+  // ✅ SCROLL TO TOP WHEN PAGE CHANGES
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [currentPage]);
 
   return (
     <div className="min-h-screen bg-slate-100">
       <div className="max-w-[1800px] mx-auto px-6 py-6">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-slate-800">
-            React Performance Optimization with usememo,useCallback,memo with pagingnation
+            React Performance Optimization with useMemo, useCallback, memo & pagination
           </h1>
-
-
         </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="bg-white rounded-2xl shadow-md p-6">
             <h2 className="text-lg font-semibold text-slate-700 mb-4">
@@ -65,20 +70,10 @@ const App = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search products..."
-              className="
-                w-full
-                border
-                border-slate-300
-                rounded-xl
-                px-4
-                py-3
-                outline-none
-                focus:ring-2
-                focus:ring-blue-500
-                focus:border-blue-500
-              "
+              className="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
+
           <div className="bg-white rounded-2xl shadow-md p-6">
             <h2 className="text-lg font-semibold text-slate-700 mb-4">
               Selected Product
@@ -98,20 +93,13 @@ const App = () => {
         />
       </div>
 
-
-
-      <div className="join flex justify-center mt-8">
+      {/* Pagination */}
+      <div className="join flex justify-center mt-8 mb-10">
 
         <button
           className="join-item btn"
           disabled={currentPage === 1}
-          onClick={() =>
-            setCurrentPage((prev) => prev - 1)window.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
-
-          }
+          onClick={() => setCurrentPage((prev) => prev - 1)}
         >
           Previous
         </button>
@@ -123,23 +111,13 @@ const App = () => {
         <button
           className="join-item btn"
           disabled={currentPage === totalPages}
-          onClick={() =>
-            setCurrentPage((prev) => prev + 1) window.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
-
-          }
+          onClick={() => setCurrentPage((prev) => prev + 1)}
         >
           Next
         </button>
 
       </div>
     </div>
-
-
-
-
   );
 };
 
