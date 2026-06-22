@@ -42,7 +42,7 @@ const App = () => {
     return () => clearTimeout(timer);
   }, [search]);
 
-  // ✅ SCROLL TO TOP WHEN PAGE CHANGES
+  
   useEffect(() => {
     window.scrollTo({
       top: 0,
