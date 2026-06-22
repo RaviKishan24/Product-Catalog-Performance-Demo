@@ -106,7 +106,11 @@ const App = () => {
           className="join-item btn"
           disabled={currentPage === 1}
           onClick={() =>
-            setCurrentPage((prev) => prev - 1)
+            setCurrentPage((prev) => prev - 1)window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+
           }
         >
           Previous
@@ -120,7 +124,11 @@ const App = () => {
           className="join-item btn"
           disabled={currentPage === totalPages}
           onClick={() =>
-            setCurrentPage((prev) => prev + 1)
+            setCurrentPage((prev) => prev + 1) window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+
           }
         >
           Next
